@@ -2,10 +2,15 @@
   --bg:#000;
   --red:#ff1b2d;
 
-  /* tuned “senior” intensity */
-  --glowA: rgba(255,27,45,.18);
-  --glowB: rgba(255,27,45,.10);
-  --glowC: rgba(255,27,45,.06);
+  /* base (subtle) */
+  --g1: rgba(255,27,45,.10);
+  --g2: rgba(255,27,45,.06);
+  --g3: rgba(255,27,45,.03);
+
+  /* hover (stronger, still premium) */
+  --hg1: rgba(255,27,45,.22);
+  --hg2: rgba(255,27,45,.14);
+  --hg3: rgba(255,27,45,.08);
 }
 
 *{ box-sizing:border-box; }
@@ -13,7 +18,8 @@ html,body{ height:100%; }
 
 body{
   margin:0;
-  background: radial-gradient(1200px 900px at 50% 45%, #050505 0%, #000 60%, #000 100%);
+  background:
+    radial-gradient(1200px 900px at 50% 45%, #050505 0%, #000 62%, #000 100%);
   color:#fff;
   overflow:hidden;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -27,18 +33,18 @@ body{
   isolation:isolate;
 }
 
-/* Cinematic vignette */
+/* vignette: only black */
 .vignette{
   position:absolute;
   inset:-1px;
   background:
-    radial-gradient(1200px 900px at 50% 45%, rgba(0,0,0,0) 40%, rgba(0,0,0,.78) 85%),
-    radial-gradient(900px 700px at 50% 55%, rgba(0,0,0,0) 35%, rgba(0,0,0,.62) 90%);
+    radial-gradient(1200px 900px at 50% 45%, rgba(0,0,0,0) 42%, rgba(0,0,0,.82) 88%),
+    radial-gradient(900px 700px at 50% 55%, rgba(0,0,0,0) 35%, rgba(0,0,0,.65) 92%);
   z-index:0;
   pointer-events:none;
 }
 
-/* Premium grain (subtle, not “dirty”) */
+/* grain: neutral, no white halo */
 .grain{
   position:absolute;
   inset:-20%;
@@ -50,14 +56,13 @@ body{
   z-index:1;
   pointer-events:none;
 }
-
 @keyframes grainMove{
   0%{ transform: translate3d(-2%, -1%, 0); }
   50%{ transform: translate3d(2%, 1%, 0); }
   100%{ transform: translate3d(-1%, 2%, 0); }
 }
 
-/* Center logo block */
+/* logo container */
 .logo-wrap{
   position:relative;
   width:min(240px, 42vw);
@@ -66,60 +71,67 @@ body{
   place-items:center;
   z-index:2;
 
-  /* parallax variables from JS */
-  transform: translate3d(var(--px, 0px), var(--py, 0px), 0) scale(1);
-  will-change: transform;
-  animation: breathe 3.2s ease-in-out infinite;
+  /* smooth hover scaling */
+  transform: scale(1);
+  transition: transform 520ms cubic-bezier(.2,.9,.2,1);
 }
 
-/* The image */
+/* make hover feel responsive */
+.logo-wrap:hover{
+  transform: scale(1.06);
+}
+
+/* logo itself */
 .logo{
   width:70%;
   height:auto;
   transform: translateZ(0);
+
+  /* ONLY red glow, no white */
   filter:
-    drop-shadow(0 0 14px var(--glowC))
-    drop-shadow(0 0 32px var(--glowB))
-    drop-shadow(0 0 68px var(--glowA));
+    drop-shadow(0 0 10px var(--g3))
+    drop-shadow(0 0 26px var(--g2))
+    drop-shadow(0 0 52px var(--g1));
+  transition: filter 520ms cubic-bezier(.2,.9,.2,1);
 }
 
-/* Core glow blob: darker, smaller, layered */
+/* glow behind */
 .logo-glow{
   position:absolute;
   inset: 26%;
   border-radius: 999px;
   background:
     radial-gradient(circle at 50% 45%,
-      rgba(255,27,45,.45) 0%,
-      rgba(255,27,45,.22) 22%,
-      rgba(255,27,45,.10) 44%,
-      rgba(255,27,45,0) 70%
+      rgba(255,27,45,.34) 0%,
+      rgba(255,27,45,.16) 22%,
+      rgba(255,27,45,.07) 44%,
+      rgba(255,27,45,0) 72%
     );
-  filter: blur(16px);
-  opacity:.75;
+  filter: blur(18px);
+  opacity:.62;
   transform: translateZ(0);
-  animation: glow 3.2s ease-in-out infinite;
+  transition:
+    opacity 520ms cubic-bezier(.2,.9,.2,1),
+    inset 520ms cubic-bezier(.2,.9,.2,1),
+    filter 520ms cubic-bezier(.2,.9,.2,1);
 }
 
-/* Subtle ring – “expensive”, barely there */
-.ring{
-  position:absolute;
-  inset: 18%;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 50% 50%,
-      rgba(255,255,255,0) 56%,
-      rgba(255,27,45,.10) 62%,
-      rgba(255,27,45,.04) 68%,
-      rgba(255,255,255,0) 76%
-    );
-  filter: blur(.2px);
-  opacity:.55;
-  transform: translateZ(0);
-  animation: ring 4.6s ease-in-out infinite;
+/* hover: more glow, slightly larger bloom */
+.logo-wrap:hover .logo-glow{
+  inset: 22%;
+  opacity:.88;
+  filter: blur(22px);
 }
 
-/* Bottom-left spinner – quiet */
+/* hover: stronger drop-shadows (red only) */
+.logo-wrap:hover .logo{
+  filter:
+    drop-shadow(0 0 12px var(--hg3))
+    drop-shadow(0 0 34px var(--hg2))
+    drop-shadow(0 0 78px var(--hg1));
+}
+
+/* bottom-left spinner (quiet) */
 .corner-spinner{
   position:absolute;
   left: 32px;
@@ -133,26 +145,10 @@ body{
   filter: drop-shadow(0 0 10px rgba(255,27,45,.10));
   z-index:3;
 }
-
 @keyframes spin{ to{ transform: rotate(360deg); } }
 
-@keyframes breathe{
-  0%,100%{ transform: translate3d(var(--px, 0px), var(--py, 0px), 0) scale(1); }
-  50%{ transform: translate3d(var(--px, 0px), var(--py, 0px), 0) scale(1.02); }
-}
-
-@keyframes glow{
-  0%,100%{ transform: scale(1); opacity:.62; }
-  50%{ transform: scale(1.08); opacity:.82; }
-}
-
-@keyframes ring{
-  0%,100%{ transform: scale(1); opacity:.35; }
-  50%{ transform: scale(1.12); opacity:.55; }
-}
-
-/* Motion accessibility */
+/* reduced motion */
 @media (prefers-reduced-motion: reduce){
-  .logo-wrap, .logo-glow, .ring, .corner-spinner, .grain{ animation:none; }
-  .logo-wrap{ transform:none; }
+  .grain, .corner-spinner{ animation:none; }
+  .logo-wrap, .logo, .logo-glow{ transition:none; }
 }
