@@ -6,22 +6,20 @@
   <meta name="theme-color" content="#000000" />
   <title>Yasons Studio</title>
 
-  <!-- Preload logo to avoid flash / late load -->
   <link rel="preload" as="image" href="assets/img/logo.png" />
-
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="splash" aria-label="Yasons Studio loading screen">
+    <!-- subtle environment -->
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- logo -->
     <div class="logo-wrap" role="img" aria-label="Yasons Studio">
-      <!-- glow behind -->
       <div class="logo-glow" aria-hidden="true"></div>
-
-      <!-- premium ring + light streak -->
       <div class="ring" aria-hidden="true"></div>
-      <div class="streak" aria-hidden="true"></div>
 
-      <!-- your logo -->
       <img class="logo" src="assets/img/logo.png" alt="Yasons Studio logo" />
     </div>
 
@@ -29,7 +27,6 @@
     <div class="corner-spinner" aria-hidden="true"></div>
   </main>
 
-  <!-- optional: parallax glow -->
   <script src="script.js"></script>
 </body>
 </html>
