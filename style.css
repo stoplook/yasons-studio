@@ -1,8 +1,11 @@
 :root{
   --bg:#000;
   --red:#ff1b2d;
-  --red-soft: rgba(255,27,45,.15);
-  --red-ultra: rgba(255,27,45,.06);
+
+  /* tuned “senior” intensity */
+  --glowA: rgba(255,27,45,.18);
+  --glowB: rgba(255,27,45,.10);
+  --glowC: rgba(255,27,45,.06);
 }
 
 *{ box-sizing:border-box; }
@@ -10,9 +13,7 @@ html,body{ height:100%; }
 
 body{
   margin:0;
-  background:
-    radial-gradient(900px 500px at 50% 45%, var(--red-ultra), transparent 60%),
-    linear-gradient(180deg, #000 0%, #050505 100%);
+  background: radial-gradient(1200px 900px at 50% 45%, #050505 0%, #000 60%, #000 100%);
   color:#fff;
   overflow:hidden;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -26,139 +27,132 @@ body{
   isolation:isolate;
 }
 
-/* subtle vignette */
-.splash::before{
-  content:"";
+/* Cinematic vignette */
+.vignette{
   position:absolute;
-  inset:-20%;
-  background: radial-gradient(circle at 50% 50%, transparent 45%, rgba(0,0,0,.75) 80%);
+  inset:-1px;
+  background:
+    radial-gradient(1200px 900px at 50% 45%, rgba(0,0,0,0) 40%, rgba(0,0,0,.78) 85%),
+    radial-gradient(900px 700px at 50% 55%, rgba(0,0,0,0) 35%, rgba(0,0,0,.62) 90%);
+  z-index:0;
   pointer-events:none;
-  z-index:-2;
 }
 
-/* LOGO WRAP */
+/* Premium grain (subtle, not “dirty”) */
+.grain{
+  position:absolute;
+  inset:-20%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+  opacity:.08;
+  transform: translateZ(0);
+  animation: grainMove 8s steps(2) infinite;
+  z-index:1;
+  pointer-events:none;
+}
+
+@keyframes grainMove{
+  0%{ transform: translate3d(-2%, -1%, 0); }
+  50%{ transform: translate3d(2%, 1%, 0); }
+  100%{ transform: translate3d(-1%, 2%, 0); }
+}
+
+/* Center logo block */
 .logo-wrap{
   position:relative;
   width:min(240px, 42vw);
-  aspect-ratio:1/1;
+  aspect-ratio: 1 / 1;
   display:grid;
   place-items:center;
-
-  --mx:0px;
-  --my:0px;
-
-  animation: float 4s ease-in-out infinite;
-}
-
-/* logo */
-.logo{
-  width:72%;
-  height:auto;
   z-index:2;
 
-  filter:
-    drop-shadow(0 10px 30px rgba(0,0,0,.7))
-    drop-shadow(0 0 20px var(--red-soft));
-
-  animation: pulse 4s ease-in-out infinite;
+  /* parallax variables from JS */
+  transform: translate3d(var(--px, 0px), var(--py, 0px), 0) scale(1);
+  will-change: transform;
+  animation: breathe 3.2s ease-in-out infinite;
 }
 
-/* refined glow */
+/* The image */
+.logo{
+  width:70%;
+  height:auto;
+  transform: translateZ(0);
+  filter:
+    drop-shadow(0 0 14px var(--glowC))
+    drop-shadow(0 0 32px var(--glowB))
+    drop-shadow(0 0 68px var(--glowA));
+}
+
+/* Core glow blob: darker, smaller, layered */
 .logo-glow{
   position:absolute;
-  inset:18%;
-  border-radius:50%;
+  inset: 26%;
+  border-radius: 999px;
   background:
-    radial-gradient(circle at 50% 50%,
-      rgba(255,27,45,.35) 0%,
-      rgba(255,27,45,.18) 25%,
-      rgba(255,27,45,.08) 45%,
-      rgba(255,27,45,0) 70%);
+    radial-gradient(circle at 50% 45%,
+      rgba(255,27,45,.45) 0%,
+      rgba(255,27,45,.22) 22%,
+      rgba(255,27,45,.10) 44%,
+      rgba(255,27,45,0) 70%
+    );
   filter: blur(16px);
-  opacity:.7;
-  transform: translate3d(var(--mx), var(--my), 0);
-  animation: glow 4s ease-in-out infinite;
-  z-index:0;
+  opacity:.75;
+  transform: translateZ(0);
+  animation: glow 3.2s ease-in-out infinite;
 }
 
-/* subtle ring */
+/* Subtle ring – “expensive”, barely there */
 .ring{
   position:absolute;
-  inset:10%;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,.05);
-  box-shadow: 0 0 20px rgba(255,27,45,.05);
-  opacity:.5;
-  pointer-events:none;
+  inset: 18%;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 50%,
+      rgba(255,255,255,0) 56%,
+      rgba(255,27,45,.10) 62%,
+      rgba(255,27,45,.04) 68%,
+      rgba(255,255,255,0) 76%
+    );
+  filter: blur(.2px);
+  opacity:.55;
+  transform: translateZ(0);
+  animation: ring 4.6s ease-in-out infinite;
 }
 
-/* subtle streak */
-.streak{
-  position:absolute;
-  inset:-40%;
-  background: linear-gradient(
-    110deg,
-    transparent 40%,
-    rgba(255,255,255,.05) 50%,
-    transparent 60%
-  );
-  filter: blur(12px);
-  opacity:.4;
-  animation: streak 6s ease-in-out infinite;
-  pointer-events:none;
-}
-
-/* spinner */
+/* Bottom-left spinner – quiet */
 .corner-spinner{
   position:absolute;
-  left:30px;
-  bottom:30px;
-  width:20px;
-  height:20px;
-  border-radius:50%;
-  border:2px solid rgba(255,255,255,.15);
-  border-top-color:var(--red);
-  animation: spin .9s linear infinite;
-  filter: drop-shadow(0 0 10px var(--red-soft));
+  left: 32px;
+  bottom: 32px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,.16);
+  border-top-color: rgba(255,27,45,.55);
+  animation: spin .95s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(255,27,45,.10));
+  z-index:3;
 }
 
-/* ANIMATIONS */
+@keyframes spin{ to{ transform: rotate(360deg); } }
 
-@keyframes spin{
-  to{ transform: rotate(360deg); }
-}
-
-@keyframes float{
-  0%,100%{ transform: translateY(0) scale(1); }
-  50%{ transform: translateY(-4px) scale(1.01); }
-}
-
-@keyframes pulse{
-  0%,100%{
-    filter:
-      drop-shadow(0 10px 30px rgba(0,0,0,.7))
-      drop-shadow(0 0 16px var(--red-soft));
-  }
-  50%{
-    filter:
-      drop-shadow(0 12px 34px rgba(0,0,0,.75))
-      drop-shadow(0 0 26px rgba(255,27,45,.22));
-  }
+@keyframes breathe{
+  0%,100%{ transform: translate3d(var(--px, 0px), var(--py, 0px), 0) scale(1); }
+  50%{ transform: translate3d(var(--px, 0px), var(--py, 0px), 0) scale(1.02); }
 }
 
 @keyframes glow{
-  0%,100%{ opacity:.6; transform: scale(1); }
-  50%{ opacity:.85; transform: scale(1.05); }
+  0%,100%{ transform: scale(1); opacity:.62; }
+  50%{ transform: scale(1.08); opacity:.82; }
 }
 
-@keyframes streak{
-  0%,100%{ transform: translateX(-10%) rotate(10deg); }
-  50%{ transform: translateX(10%) rotate(10deg); }
+@keyframes ring{
+  0%,100%{ transform: scale(1); opacity:.35; }
+  50%{ transform: scale(1.12); opacity:.55; }
 }
 
+/* Motion accessibility */
 @media (prefers-reduced-motion: reduce){
-  .logo-wrap,
-  .logo,
-  .logo-glow,
-  .corner-spinner{ animation:none !important; }
+  .logo-wrap, .logo-glow, .ring, .corner-spinner, .grain{ animation:none; }
+  .logo-wrap{ transform:none; }
 }
