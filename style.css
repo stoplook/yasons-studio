@@ -28,20 +28,21 @@ body{
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-/* Layout */
+/* Fullscreen centered container */
 .splash{
-  height:100%;
-  display:grid;
-  place-items:center;
-  position:relative;
-  isolation:isolate;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  isolation: isolate;
 }
 
 /* Cinematic vignette (pure black only) */
 .splash::before{
   content:"";
   position:absolute;
-  inset:-1px;
+  inset:0;
   background:
     radial-gradient(1200px 900px at 50% 45%, rgba(0,0,0,0) 42%, rgba(0,0,0,.82) 88%),
     radial-gradient(900px 700px at 50% 55%, rgba(0,0,0,0) 35%, rgba(0,0,0,.65) 92%);
@@ -54,8 +55,9 @@ body{
   position:relative;
   width:min(240px, 42vw);
   aspect-ratio:1/1;
-  display:grid;
-  place-items:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   z-index:2;
 
   transform: scale(1);
