@@ -1,23 +1,39 @@
-const wrap = document.querySelector(".logo-wrap");
-if (wrap) {
-  const set = (x, y) => {
-    wrap.style.setProperty("--mx", `${x}px`);
-    wrap.style.setProperty("--my", `${y}px`);
-  };
+(() => {
+  const wrap = document.querySelector(".logo-wrap");
+  if (!wrap) return;
 
-  const onMove = (clientX, clientY) => {
-    const r = wrap.getBoundingClientRect();
-    const cx = r.left + r.width / 2;
-    const cy = r.top + r.height / 2;
+  let tx = 0, ty = 0;   // target
+  let cx = 0, cy = 0;   // current
 
-    // small premium motion only
-    const dx = (clientX - cx) / r.width;
-    const dy = (clientY - cy) / r.height;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-    set(dx * 14, dy * 14);
-  };
+  function onMove(e){
+    const w = window.innerWidth;
+    const h = window.innerHeight;
 
-  window.addEventListener("pointermove", (e) => onMove(e.clientX, e.clientY), { passive: true });
-  window.addEventListener("pointerleave", () => set(0, 0));
-  window.addEventListener("blur", () => set(0, 0));
-}
+    const x = (e.clientX / w) * 2 - 1; // -1..1
+    const y = (e.clientY / h) * 2 - 1;
+
+    // subtle, “premium”
+    tx = clamp(x * 8, -10, 10);
+    ty = clamp(y * 8, -10, 10);
+  }
+
+  function tick(){
+    // smoothing (ease)
+    cx += (tx - cx) * 0.08;
+    cy += (ty - cy) * 0.08;
+
+    wrap.style.setProperty("--px", `${cx.toFixed(2)}px`);
+    wrap.style.setProperty("--py", `${cy.toFixed(2)}px`);
+
+    requestAnimationFrame(tick);
+  }
+
+  window.addEventListener("pointermove", onMove, { passive: true });
+
+  // reset on leave
+  window.addEventListener("pointerleave", () => { tx = 0; ty = 0; }, { passive: true });
+
+  tick();
+})();
