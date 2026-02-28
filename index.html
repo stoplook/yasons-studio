@@ -3,12 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
   <title>Yasons Studio</title>
+
+  <!-- Preload logo to avoid flash / late load -->
+  <link rel="preload" as="image" href="assets/img/logo.png" />
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="splash">
-    <div class="logo-wrap" aria-label="Loading">
+  <main class="splash" aria-label="Yasons Studio loading screen">
+    <div class="logo-wrap" role="img" aria-label="Yasons Studio">
       <!-- glow behind -->
       <div class="logo-glow" aria-hidden="true"></div>
 
