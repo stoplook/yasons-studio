@@ -1,1 +1,91 @@
+:root{
+  --bg:#000;
+  --red:#ff1b2d;
+}
 
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:#fff;
+  overflow:hidden;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.splash{
+  height:100%;
+  display:grid;
+  place-items:center;
+  position:relative;
+}
+
+/* Center logo block */
+.logo-wrap{
+  position:relative;
+  width:min(220px, 40vw);
+  aspect-ratio: 1 / 1;
+  display:grid;
+  place-items:center;
+  animation: breathe 2.6s ease-in-out infinite;
+}
+
+/* The image itself */
+.logo{
+  width:70%;
+  height:auto;
+  filter:
+    drop-shadow(0 0 18px rgba(255,27,45,.25))
+    drop-shadow(0 0 45px rgba(255,27,45,.20));
+  transform: translateZ(0);
+}
+
+/* Red glow blob behind logo */
+.logo-glow{
+  position:absolute;
+  inset: 22%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 45%,
+    rgba(255,27,45,.95) 0%,
+    rgba(255,27,45,.55) 28%,
+    rgba(255,27,45,.18) 55%,
+    rgba(255,27,45,0) 72%
+  );
+  filter: blur(10px);
+  opacity: .85;
+  animation: glow 2.6s ease-in-out infinite;
+}
+
+/* Bottom-left spinner */
+.corner-spinner{
+  position:absolute;
+  left: 36px;
+  bottom: 36px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 3px solid rgba(255,255,255,.22);
+  border-top-color: rgba(255,27,45,.95);
+  animation: spin .9s linear infinite;
+  filter: drop-shadow(0 0 10px rgba(255,27,45,.18));
+}
+
+/* Animations */
+@keyframes spin{
+  to{ transform: rotate(360deg); }
+}
+
+@keyframes breathe{
+  0%,100%{ transform: scale(1); }
+  50%{ transform: scale(1.03); }
+}
+
+@keyframes glow{
+  0%,100%{ transform: scale(1); opacity: .78; }
+  50%{ transform: scale(1.09); opacity: .95; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .logo-wrap, .logo-glow, .corner-spinner{ animation:none; }
+}
