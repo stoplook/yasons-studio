@@ -1,13 +1,14 @@
 :root{
   --bg:#000;
-  --red:#ff1b2d;
 }
 
 *{ box-sizing:border-box; }
 html,body{ height:100%; }
+
 body{
   margin:0;
-  background:var(--bg);
+  background: radial-gradient(1200px 800px at 50% 40%, rgba(255,255,255,.06), transparent 60%),
+              var(--bg);
   color:#fff;
   overflow:hidden;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -23,37 +24,74 @@ body{
 /* Center logo block */
 .logo-wrap{
   position:relative;
-  width:min(220px, 40vw);
+  width:min(260px, 44vw);
   aspect-ratio: 1 / 1;
   display:grid;
   place-items:center;
-  animation: breathe 2.6s ease-in-out infinite;
+  animation: breathe 3.2s ease-in-out infinite;
+  isolation:isolate; /* чтобы слои свечения не смешивались с остальным */
+}
+
+/* Multi-color glow bloom behind */
+.logo-glow{
+  position:absolute;
+  inset: -22%;
+  border-radius: 50%;
+
+  /* несколько радиальных пятен с разными оттенками */
+  background:
+    radial-gradient(circle at 35% 35%,
+      rgba(120,220,255,.55) 0%,
+      rgba(120,220,255,.18) 35%,
+      rgba(120,220,255,0) 62%),
+    radial-gradient(circle at 70% 38%,
+      rgba(90,140,255,.50) 0%,
+      rgba(90,140,255,.16) 36%,
+      rgba(90,140,255,0) 64%),
+    radial-gradient(circle at 55% 68%,
+      rgba(180,120,255,.48) 0%,
+      rgba(180,120,255,.14) 40%,
+      rgba(180,120,255,0) 70%),
+    radial-gradient(circle at 38% 72%,
+      rgba(255,120,200,.42) 0%,
+      rgba(255,120,200,.12) 42%,
+      rgba(255,120,200,0) 72%);
+
+  filter: blur(22px) saturate(140%);
+  opacity: .85;
+  transform: translateZ(0);
+  animation: glow 3.2s ease-in-out infinite;
+  z-index: 0;
+}
+
+/* subtle ring to feel more “premium” */
+.logo-wrap::before{
+  content:"";
+  position:absolute;
+  inset: 10%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%,
+    rgba(255,255,255,.10),
+    rgba(255,255,255,0) 60%);
+  filter: blur(10px);
+  opacity:.55;
+  z-index: 1;
+  pointer-events:none;
 }
 
 /* The image itself */
 .logo{
-  width:70%;
+  width:72%;
   height:auto;
-  filter:
-    drop-shadow(0 0 18px rgba(255,27,45,.25))
-    drop-shadow(0 0 45px rgba(255,27,45,.20));
+  z-index: 2;
   transform: translateZ(0);
-}
 
-/* Red glow blob behind logo */
-.logo-glow{
-  position:absolute;
-  inset: 22%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 45%,
-    rgba(255,27,45,.95) 0%,
-    rgba(255,27,45,.55) 28%,
-    rgba(255,27,45,.18) 55%,
-    rgba(255,27,45,0) 72%
-  );
-  filter: blur(10px);
-  opacity: .85;
-  animation: glow 2.6s ease-in-out infinite;
+  /* основной Apple-like “bloom” прямо с картинки */
+  filter:
+    drop-shadow(0 0 8px rgba(255,255,255,.18))
+    drop-shadow(0 0 18px rgba(120,220,255,.22))
+    drop-shadow(0 0 34px rgba(150,130,255,.18))
+    drop-shadow(0 0 58px rgba(255,120,200,.14));
 }
 
 /* Bottom-left spinner */
@@ -64,10 +102,15 @@ body{
   width: 22px;
   height: 22px;
   border-radius: 999px;
-  border: 3px solid rgba(255,255,255,.22);
-  border-top-color: rgba(255,27,45,.95);
+
+  border: 3px solid rgba(255,255,255,.18);
+  border-top-color: rgba(160,200,255,.85);
+
   animation: spin .9s linear infinite;
-  filter: drop-shadow(0 0 10px rgba(255,27,45,.18));
+
+  filter:
+    drop-shadow(0 0 10px rgba(120,220,255,.12))
+    drop-shadow(0 0 22px rgba(255,120,200,.08));
 }
 
 /* Animations */
@@ -77,12 +120,20 @@ body{
 
 @keyframes breathe{
   0%,100%{ transform: scale(1); }
-  50%{ transform: scale(1.03); }
+  50%{ transform: scale(1.025); }
 }
 
 @keyframes glow{
-  0%,100%{ transform: scale(1); opacity: .78; }
-  50%{ transform: scale(1.09); opacity: .95; }
+  0%,100%{
+    transform: scale(1);
+    opacity: .78;
+    filter: blur(22px) saturate(140%);
+  }
+  50%{
+    transform: scale(1.09);
+    opacity: .98;
+    filter: blur(26px) saturate(165%);
+  }
 }
 
 /* Respect reduced motion */
